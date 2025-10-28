@@ -1,4 +1,9 @@
-# Create a simple C# assembly
+# Assembly.ps1 - fixed version
+# Define and ensure output directory exists BEFORE any Join-Path calls
+$outDir = "C:\EDRLab\stage2"
+New-Item -Path $outDir -ItemType Directory -Force | Out-Null
+
+# C# code (here-string)
 $code = @"
 using System;
 using System.Diagnostics;
@@ -49,21 +54,24 @@ public class ReconTool {
 }
 "@
 
-# Compile to assembly in memory
-# Add-Type -TypeDefinition $code -Language CSharp -OutputAssembly C:\Users\administrator\Desktop\EDRLab\stage2\recon.dll
-# Write-Host "Assembly compiled successfully!" -ForegroundColor Green
+# Build paths using Join-Path (use $outDir and relative filenames)
+$assemblyPath = Join-Path $outDir "recon.dll"
+$srcPath      = Join-Path $outDir "recon.cs"
 
-$assemblyPath = Join-Path $outDir "C:\Users\administrator\Desktop\EDRLab\stage2\recon.dll"
+# Try to compile - reference System.Management so ManagementObjectSearcher resolves
 try {
     Add-Type -TypeDefinition $code -Language CSharp -ReferencedAssemblies "System.Management" -OutputAssembly $assemblyPath -ErrorAction Stop
     Write-Host "Assembly compiled successfully to $assemblyPath" -ForegroundColor Green
 } catch {
     Write-Host "Compilation failed:" -ForegroundColor Red
-    $_.Exception.ToString()
+    Write-Host $_.Exception.ToString()
 }
 
-# Also save as raw code for remote loading
-# $code | Out-File C:\EDRLab\stage2\recon.cs
-$srcPath = Join-Path $outDir "C:\Users\administrator\Desktop\EDRLab\stage2\recon.cs"
-$code | Out-File -FilePath $srcPath -Encoding UTF8 -Force
-Write-Host "Source written to $srcPath" -ForegroundColor Green
+# Save source file (force overwrite, use UTF8)
+try {
+    $code | Out-File -FilePath $srcPath -Encoding UTF8 -Force
+    Write-Host "Source written to $srcPath" -ForegroundColor Green
+} catch {
+    Write-Host "Failed to write source file:" -ForegroundColor Red
+    Write-Host $_.Exception.ToString()
+}
