@@ -50,8 +50,8 @@ public class ReconTool {
 "@
 
 # Compile to assembly in memory
-Add-Type -TypeDefinition $code -Language CSharp -OutputAssembly C:\EDRLab\lab4\recon.dll
+Add-Type -TypeDefinition $code -Language CSharp -OutputAssembly C:\EDRLab\stage2\recon.dll
 Write-Host "Assembly compiled successfully!" -ForegroundColor Green
 
 # Also save as raw code for remote loading
-$code | Out-File C:\EDRLab\lab4\recon.cs
+$code | Out-File C:\EDRLab\stage2\recon.cs
