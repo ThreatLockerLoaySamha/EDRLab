@@ -50,8 +50,20 @@ public class ReconTool {
 "@
 
 # Compile to assembly in memory
-Add-Type -TypeDefinition $code -Language CSharp -OutputAssembly C:\EDRLab\stage2\recon.dll
-Write-Host "Assembly compiled successfully!" -ForegroundColor Green
+# Add-Type -TypeDefinition $code -Language CSharp -OutputAssembly C:\Users\administrator\Desktop\EDRLab\stage2\recon.dll
+# Write-Host "Assembly compiled successfully!" -ForegroundColor Green
+
+$assemblyPath = Join-Path $outDir "C:\Users\administrator\Desktop\EDRLab\stage2\recon.dll"
+try {
+    Add-Type -TypeDefinition $code -Language CSharp -ReferencedAssemblies "System.Management" -OutputAssembly $assemblyPath -ErrorAction Stop
+    Write-Host "Assembly compiled successfully to $assemblyPath" -ForegroundColor Green
+} catch {
+    Write-Host "Compilation failed:" -ForegroundColor Red
+    $_.Exception.ToString()
+}
 
 # Also save as raw code for remote loading
-$code | Out-File C:\EDRLab\stage2\recon.cs
+# $code | Out-File C:\EDRLab\stage2\recon.cs
+$srcPath = Join-Path $outDir "C:\Users\administrator\Desktop\EDRLab\stage2\recon.cs"
+$code | Out-File -FilePath $srcPath -Encoding UTF8 -Force
+Write-Host "Source written to $srcPath" -ForegroundColor Green
