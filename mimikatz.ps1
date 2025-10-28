@@ -38,5 +38,5 @@ function Invoke-SafeMimikatz {
 }
 '@
 
-$safeMimikatz | Out-File /home/kali/EDRLab/lab2/mimikatz.ps1
+$safeMimikatz | Out-File /home/kali/EDRLab/stage3/mimikatz.ps1
 Write-Host "Safe Mimikatz simulation created!" -ForegroundColor Green
